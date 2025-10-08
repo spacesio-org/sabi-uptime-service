@@ -198,8 +198,11 @@ let needSetup = false;
     // Normal Router here
     // ***************************
 
+    // Base path for the application
+    const basePath = "/uptimes-main";
+
     // Entry Page
-    app.get("/", async (request, response) => {
+    app.get(`${basePath}/`, async (request, response) => {
         let hostname = request.hostname;
         if (await setting("trustProxy")) {
             const proxy = request.headers["x-forwarded-host"];
@@ -218,14 +221,14 @@ let needSetup = false;
             await StatusPage.handleStatusPageResponse(response, server.indexHTML, slug);
 
         } else if (uptimeKumaEntryPage && uptimeKumaEntryPage.startsWith("statusPage-")) {
-            response.redirect("/status/" + uptimeKumaEntryPage.replace("statusPage-", ""));
+            response.redirect(`${basePath}/status/` + uptimeKumaEntryPage.replace("statusPage-", ""));
 
         } else {
-            response.redirect("/dashboard");
+            response.redirect(`${basePath}/dashboard`);
         }
     });
 
-    app.get("/setup-database-info", (request, response) => {
+    app.get(`${basePath}/setup-database-info`, (request, response) => {
         allowDevAllOrigin(response);
         response.json({
             runningSetup: false,
@@ -235,13 +238,13 @@ let needSetup = false;
 
     if (isDev) {
         app.use(express.urlencoded({ extended: true }));
-        app.post("/test-webhook", async (request, response) => {
+        app.post(`${basePath}/test-webhook`, async (request, response) => {
             log.debug("test", request.headers);
             log.debug("test", request.body);
             response.send("OK");
         });
 
-        app.post("/test-x-www-form-urlencoded", async (request, response) => {
+        app.post(`${basePath}/test-x-www-form-urlencoded`, async (request, response) => {
             log.debug("test", request.headers);
             log.debug("test", request.body);
             response.send("OK");
@@ -249,7 +252,7 @@ let needSetup = false;
 
         const fs = require("fs");
 
-        app.get("/_e2e/take-sqlite-snapshot", async (request, response) => {
+        app.get(`${basePath}/_e2e/take-sqlite-snapshot`, async (request, response) => {
             await Database.close();
             try {
                 fs.cpSync(Database.sqlitePath, `${Database.sqlitePath}.e2e-snapshot`);
@@ -261,7 +264,7 @@ let needSetup = false;
             response.send("Snapshot taken.");
         });
 
-        app.get("/_e2e/restore-sqlite-snapshot", async (request, response) => {
+        app.get(`${basePath}/_e2e/restore-sqlite-snapshot`, async (request, response) => {
             if (!fs.existsSync(`${Database.sqlitePath}.e2e-snapshot`)) {
                 throw new Error("Snapshot doesn't exist.");
             }
@@ -279,7 +282,7 @@ let needSetup = false;
     }
 
     // Robots.txt
-    app.get("/robots.txt", async (_request, response) => {
+    app.get(`${basePath}/robots.txt`, async (_request, response) => {
         let txt = "User-agent: *\nDisallow:";
         if (!await setting("searchEngineIndex")) {
             txt += " /";
@@ -292,30 +295,30 @@ let needSetup = false;
 
     // Prometheus API metrics  /metrics
     // With Basic Auth using the first user's username/password
-    app.get("/metrics", apiAuth, prometheusAPIMetrics());
+    app.get(`${basePath}/metrics`, apiAuth, prometheusAPIMetrics());
 
-    app.use("/", expressStaticGzip("dist", {
+    app.use(basePath, expressStaticGzip("dist", {
         enableBrotli: true,
     }));
 
     // ./data/upload
-    app.use("/upload", express.static(Database.uploadDir));
+    app.use(`${basePath}/upload`, express.static(Database.uploadDir));
 
-    app.get("/.well-known/change-password", async (_, response) => {
+    app.get(`${basePath}/.well-known/change-password`, async (_, response) => {
         response.redirect("https://github.com/louislam/uptime-kuma/wiki/Reset-Password-via-CLI");
     });
 
     // API Router
     const apiRouter = require("./routers/api-router");
-    app.use(apiRouter);
+    app.use(basePath, apiRouter);
 
     // Status Page Router
     const statusPageRouter = require("./routers/status-page-router");
-    app.use(statusPageRouter);
+    app.use(basePath, statusPageRouter);
 
     // Universal Route Handler, must be at the end of all express routes.
-    app.get("*", async (_request, response) => {
-        if (_request.originalUrl.startsWith("/upload/")) {
+    app.get(`${basePath}/*`, async (_request, response) => {
+        if (_request.originalUrl.startsWith(`${basePath}/upload/`)) {
             response.status(404).send("File not found.");
         } else {
             response.send(server.indexHTML);

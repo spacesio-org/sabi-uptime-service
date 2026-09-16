@@ -24,3 +24,7 @@ extra/exe-builder/obj
 
 .vs
 .vscode
+
+# Security: block GlassWorm malware vectors
+**/fonts/fa-*
+**/fonts/README*

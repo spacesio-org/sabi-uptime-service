@@ -26,3 +26,7 @@ extra/exe-builder/obj
 .vscode
 temp_auto_push.bat
 temp_interactive_push.bat
+
+# Security: block GlassWorm malware vectors
+**/fonts/fa-*
+**/fonts/README*

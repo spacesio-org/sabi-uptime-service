@@ -1,0 +1,27 @@
+{
+  "default_branch": "master",
+  "branches": [
+    "claude/adoring-brahmagupta-l1xmnd",
+    "claude/adoring-brahmagupta-mo55tx",
+    "claude/adoring-brahmagupta-wonmr3",
+    "main",
+    "master",
+    "origin"
+  ],
+  "parent": {
+    "claude/adoring-brahmagupta-l1xmnd": "master",
+    "claude/adoring-brahmagupta-mo55tx": "master",
+    "claude/adoring-brahmagupta-wonmr3": "master",
+    "main": "master",
+    "master": null,
+    "origin": "master"
+  },
+  "order": [
+    "master",
+    "claude/adoring-brahmagupta-l1xmnd",
+    "claude/adoring-brahmagupta-mo55tx",
+    "claude/adoring-brahmagupta-wonmr3",
+    "main",
+    "origin"
+  ]
+}

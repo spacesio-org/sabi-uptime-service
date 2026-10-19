@@ -194,3 +194,50 @@ Feel free to correct the grammar in the documentation or code.
 My mother language is not English and my grammar is not that great.
 
 
+
+## AI Context
+
+This repo uses the [Sabi AI Coding Standard](https://github.com/spacesio-org/sabi-ai-coding-standard-pattern) as a git submodule at `standard/`.
+
+**Read [`CLAUDE.md`](CLAUDE.md) first** — it redirects to the full architecture, rules, plans, and coding standards for this service.
+
+Full docs: [`standard/docs/sabi-uptime-service/`](standard/docs/sabi-uptime-service/)
+Active plans: [`standard/plans/sabi-uptime-service/`](standard/plans/sabi-uptime-service/)
+
+For a complete guide to all commands and usage examples see [`standard/commands/COMMANDS.md`](standard/commands/COMMANDS.md).
+
+### Available Commands
+
+| Command | Description |
+|---|---|
+| `/sb-audit` | Run standards, security, and performance audit for the current repo |
+| `/sb-code` | Write, refine, and implement engineering specs and tasks with tests |
+| `/sb-design` | Generate and refine clickable HTML UI prototypes from product specs |
+| `/sb-knowledge` | Rebuild the repo knowledge base; ask questions about any repo |
+| `/sb-personnel` | View and update your engineer profile, personality tags, and team leaderboard |
+| `/sb-plans` | Full automated pipeline — pending specs → tasks → implement → open PR |
+| `/sb-product` | Draft and manage product specs (PRDs) with service topology context |
+| `/sb-quarterly` | Generate quarterly activity reports and ask performance questions about this repo |
+| `/sb-setup` | Run the full repo-setup pipeline for the current repo (submodule, scaffold, commands) |
+| `/sb-test` | Generate OpenAPI 3.0 + Postman collection for completed specs or done tasks |
+
+### First-time Setup (once per machine)
+
+```bash
+# 1. Initialise the submodule
+git submodule update --init --recursive
+
+# 2. Pull latest standards
+cd standard && git pull origin main && cd ..
+
+# 3. Install sb-* commands globally
+bash standard/commands/install.sh
+```
+
+To force-refresh all commands to the latest version:
+```bash
+bash standard/commands/install.sh --force
+```
+
+Then open Claude Code in this repo and type any `/sb-*` command.
+Full command reference: [`standard/commands/COMMANDS.md`](standard/commands/COMMANDS.md)

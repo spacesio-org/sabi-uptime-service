@@ -1,0 +1,3 @@
+[submodule "standard"]
+	path = standard
+	url = https://github.com/spacesio-org/sabi-ai-coding-standard-pattern.git
